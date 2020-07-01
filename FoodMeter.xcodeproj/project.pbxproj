@@ -15,6 +15,7 @@
 		843CE66024AB6DAB0095ED53 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 843CE65E24AB6DAB0095ED53 /* LaunchScreen.storyboard */; };
 		843CE66C24AB81290095ED53 /* FoodClassifier.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 843CE66B24AB81290095ED53 /* FoodClassifier.mlmodel */; };
 		8498C4AB24ABCE87004575FE /* MealClassifier.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 8498C4AA24ABCE87004575FE /* MealClassifier.mlmodel */; };
+		8498C4B224ACE517004575FE /* Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8498C4B024ACE517004575FE /* Cell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		843CE66124AB6DAB0095ED53 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		843CE66B24AB81290095ED53 /* FoodClassifier.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = FoodClassifier.mlmodel; sourceTree = "<group>"; };
 		8498C4AA24ABCE87004575FE /* MealClassifier.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = MealClassifier.mlmodel; sourceTree = "<group>"; };
+		8498C4B024ACE517004575FE /* Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +66,7 @@
 				843CE65524AB6DA60095ED53 /* SceneDelegate.swift */,
 				843CE65724AB6DA60095ED53 /* ViewController.swift */,
 				843CE65924AB6DA60095ED53 /* Main.storyboard */,
+				8498C4B024ACE517004575FE /* Cell.swift */,
 				843CE65C24AB6DAB0095ED53 /* Assets.xcassets */,
 				843CE65E24AB6DAB0095ED53 /* LaunchScreen.storyboard */,
 				843CE66124AB6DAB0095ED53 /* Info.plist */,
@@ -147,6 +150,7 @@
 				8498C4AB24ABCE87004575FE /* MealClassifier.mlmodel in Sources */,
 				843CE65824AB6DA60095ED53 /* ViewController.swift in Sources */,
 				843CE65424AB6DA60095ED53 /* AppDelegate.swift in Sources */,
+				8498C4B224ACE517004575FE /* Cell.swift in Sources */,
 				843CE65624AB6DA60095ED53 /* SceneDelegate.swift in Sources */,
 				843CE66C24AB81290095ED53 /* FoodClassifier.mlmodel in Sources */,
 			);
