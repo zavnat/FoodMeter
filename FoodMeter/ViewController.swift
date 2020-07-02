@@ -9,9 +9,15 @@
 import UIKit
 import CoreML
 import Vision
+import CoreData
+
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-
+  
+  let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+  
+  var dataToUI = [PhotoImage]()
+  
   @IBOutlet weak var startTextLabel: UILabel!
   @IBOutlet weak var tableView: UITableView!
   
@@ -21,12 +27,16 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+    
     tableView.rowHeight = 310
     tableView.delegate = self
     tableView.dataSource = self
     pickerController.delegate = self
     pickerController.sourceType = .photoLibrary // Then camera
     pickerController.allowsEditing = true
+  
   }
   
   func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -37,7 +47,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
       guard let ciimage = CIImage(image: pickedImage) else {fatalError("Could not convert to CIImage")
       }
       detectFood(with: ciimage)
-    
+      
+      let myPhotoWithPhrase = PhotoImage()
+      myPhotoWithPhrase.phrase = ""
+      myPhotoWithPhrase.name = ""
     }
     pickerController.dismiss(animated: true, completion: nil)
     tableView.reloadData()
