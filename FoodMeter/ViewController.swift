@@ -22,7 +22,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
   @IBOutlet weak var tableView: UITableView!
   
   var fotoImage = [UIImage]()
-  var stringFunAnswer = ""
+
   private let pickerController = UIImagePickerController()
   
   override func viewDidLoad() {
@@ -34,7 +34,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     tableView.delegate = self
     tableView.dataSource = self
     pickerController.delegate = self
-    pickerController.sourceType = .photoLibrary // Then camera
+    pickerController.sourceType = .camera // Then camera
     pickerController.allowsEditing = true
   
   }
@@ -42,15 +42,24 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
   func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
     if let pickedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
       fotoImage.append(pickedImage)
-      //startTextLabel.text = ""
+      
+      
+      let date = Date()
+      let formatter = DateFormatter()
+      formatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
+      let fotoName = formatter.string(from: date)
+      saveImage(imageName: fotoName, image: pickedImage)
+      
+      
       
       guard let ciimage = CIImage(image: pickedImage) else {fatalError("Could not convert to CIImage")
       }
-      detectFood(with: ciimage)
+      let phrase = detectFood(with: ciimage)
       
-      let myPhotoWithPhrase = PhotoImage()
-      myPhotoWithPhrase.phrase = ""
-      myPhotoWithPhrase.name = ""
+      let myPhotoWithPhrase = PhotoImage(context: context)
+      myPhotoWithPhrase.phrase = phrase
+      myPhotoWithPhrase.name = fotoName
+      save()
     }
     pickerController.dismiss(animated: true, completion: nil)
     tableView.reloadData()
@@ -58,15 +67,18 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
   
   
   
-  func detectFood (with image: CIImage) {
+  func detectFood (with image: CIImage) -> String {
+    
+    var funPhrase = ""
     
     guard let model = try? VNCoreMLModel(for: MealClassifier().model) else {fatalError("Loading CoreML Model Failed")}
     
     let request = VNCoreMLRequest(model: model) { (request, error) in
       guard let result = request.results?.first as? VNClassificationObservation else {fatalError("Model failed to process image ")}
-      print(result.confidence)
-      print(result.identifier)
-      self.stringFunAnswer = result.identifier
+      //      print(result.confidence)
+      //      print(result.identifier)
+      
+      funPhrase = result.identifier
       
     }
     DispatchQueue.global(qos: .userInitiated).async{
@@ -78,13 +90,86 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         print(error)
       }
     }
-    
+    return funPhrase
   }
   
     @IBAction func cameraPressed(_ sender: UIBarButtonItem) {
       present(pickerController, animated: true, completion: nil)
     }
+  
+  
+  func saveImage(imageName: String, image: UIImage) {
     
+    guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+    
+    let fileName = imageName
+    let fileURL = documentsDirectory.appendingPathComponent(fileName)
+    guard let data = image.jpegData(compressionQuality: 1) else { return }
+    
+    //Checks if file exists, removes it if so.
+    if FileManager.default.fileExists(atPath: fileURL.path) {
+      do {
+        try FileManager.default.removeItem(atPath: fileURL.path)
+        print("Removed old image")
+      } catch let removeError {
+        print("couldn't remove file at path", removeError)
+      }
+    }
+    
+    do {
+      try data.write(to: fileURL)
+      print("Successs write image to file")
+    } catch let error {
+      print("error saving file with error", error)
+    }
+    
+  }
+
+  
+  
+  func loadImageFromDiskWith(fileName: String) -> UIImage? {
+    
+    let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
+    
+    let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
+    let paths = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
+    
+    if let dirPath = paths.first {
+      let imageUrl = URL(fileURLWithPath: dirPath).appendingPathComponent(fileName)
+      let image = UIImage(contentsOfFile: imageUrl.path)
+      return image
+      
+    }
+    
+    return nil
+  }
+  
+  
+  func save (){
+    do{
+     try  context.save()
+      print("Success save data to database")
+      //tableView.reloadData()
+    }catch{
+      
+    }
+  }
+  
+  
+  func load (){
+    let request: NSFetchRequest<PhotoImage> = PhotoImage.fetchRequest()
+    do{
+      dataToUI = try context.fetch(request)
+      print("Success load data from database")
+      
+      DispatchQueue.main.async {
+        self.tableView.reloadData()
+      }
+    }catch {
+
+    }
+  }
+  
 }
 
 
@@ -92,12 +177,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return fotoImage.count
+   
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! Cell
     cell.photoImage.image = fotoImage[indexPath.row]
-    cell.label.text = stringFunAnswer
+    //cell.label.text = ""
     return cell
   }
 }
+
