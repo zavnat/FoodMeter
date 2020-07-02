@@ -30,12 +30,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     //print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
     
-    tableView.rowHeight = 310
+    tableView.rowHeight = 360
     tableView.delegate = self
     tableView.dataSource = self
     pickerController.delegate = self
-    pickerController.sourceType = .camera // Then camera
+    pickerController.sourceType = .photoLibrary// Then camera
     pickerController.allowsEditing = true
+    
     
     load()
   
@@ -61,10 +62,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
       let myPhotoWithPhrase = PhotoImage(context: context)
       myPhotoWithPhrase.phrase = phrase
       myPhotoWithPhrase.name = fotoName
-      save()
+      
     }
     pickerController.dismiss(animated: true, completion: nil)
-    tableView.reloadData()
+    save()
+    load()
+    
   }
   
   
@@ -178,14 +181,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
       }
      
-//      DispatchQueue.main.async {
-//        self.tableView.reloadData()
-//      }
+      DispatchQueue.main.async {
+        self.tableView.reloadData()
+      }
     }catch {
 
     }
   }
-  
   
 }
 
@@ -202,6 +204,9 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! Cell
     cell.photoImage.image = dataToUI[indexPath.row].image
     cell.label.text = dataToUI[indexPath.row].textToImage?.phrase
+    cell.cellDelegate = self
+    cell.imageToShare = dataToUI[indexPath.row].image
+  
     return cell
   }
 }
@@ -214,4 +219,22 @@ extension Date {
     init(milliseconds:Int64) {
         self = Date(timeIntervalSince1970: TimeInterval(milliseconds) / 1000)
     }
+}
+
+extension ViewController: TableViewCell {
+  func sharePhoto(photo: UIImage) {
+    let activityController = UIActivityViewController(activityItems: [photo], applicationActivities: nil)
+    activityController.completionWithItemsHandler = {(nil,completed,_,error) in
+      if completed {
+        print("completed")
+      }else {
+        print("cancled")
+      }
+    }
+    present(activityController, animated: true)
+  }
+  
+  
+  
+  
 }

@@ -8,8 +8,14 @@
 
 import UIKit
 
+protocol TableViewCell {
+  func sharePhoto(photo: UIImage)
+}
+
 class Cell: UITableViewCell {
 
+  var cellDelegate: TableViewCell?
+  var imageToShare: UIImage?
 
   @IBOutlet weak var photoImage: UIImageView!
   @IBOutlet weak var label: UILabel!
@@ -20,6 +26,10 @@ class Cell: UITableViewCell {
 
         // Configure the view for the selected state
     }
+  
+  @IBAction func shareButtonPressed(_ sender: UIButton) {
+     cellDelegate?.sharePhoto(photo: imageToShare!)
+  }
   
   }
 
