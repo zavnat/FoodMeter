@@ -17,6 +17,7 @@
 		8498C4AB24ABCE87004575FE /* MealClassifier.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 8498C4AA24ABCE87004575FE /* MealClassifier.mlmodel */; };
 		8498C4B224ACE517004575FE /* Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8498C4B024ACE517004575FE /* Cell.swift */; };
 		8498C4BC24AD1F45004575FE /* FoodMeter.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8498C4BA24AD1F45004575FE /* FoodMeter.xcdatamodeld */; };
+		8498C4BE24AE0B8D004575FE /* ModelToUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8498C4BD24AE0B8D004575FE /* ModelToUI.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		8498C4AA24ABCE87004575FE /* MealClassifier.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = MealClassifier.mlmodel; sourceTree = "<group>"; };
 		8498C4B024ACE517004575FE /* Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cell.swift; sourceTree = "<group>"; };
 		8498C4BB24AD1F45004575FE /* FoodMeter.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = FoodMeter.xcdatamodel; sourceTree = "<group>"; };
+		8498C4BD24AE0B8D004575FE /* ModelToUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelToUI.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +70,7 @@
 				843CE65324AB6DA60095ED53 /* AppDelegate.swift */,
 				843CE65524AB6DA60095ED53 /* SceneDelegate.swift */,
 				843CE65724AB6DA60095ED53 /* ViewController.swift */,
+				8498C4BD24AE0B8D004575FE /* ModelToUI.swift */,
 				843CE65924AB6DA60095ED53 /* Main.storyboard */,
 				8498C4B024ACE517004575FE /* Cell.swift */,
 				843CE65C24AB6DAB0095ED53 /* Assets.xcassets */,
@@ -154,6 +157,7 @@
 				843CE65824AB6DA60095ED53 /* ViewController.swift in Sources */,
 				843CE65424AB6DA60095ED53 /* AppDelegate.swift in Sources */,
 				8498C4B224ACE517004575FE /* Cell.swift in Sources */,
+				8498C4BE24AE0B8D004575FE /* ModelToUI.swift in Sources */,
 				843CE65624AB6DA60095ED53 /* SceneDelegate.swift in Sources */,
 				843CE66C24AB81290095ED53 /* FoodClassifier.mlmodel in Sources */,
 				8498C4BC24AD1F45004575FE /* FoodMeter.xcdatamodeld in Sources */,

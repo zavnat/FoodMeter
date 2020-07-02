@@ -16,7 +16,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
   
   let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
   
-  var dataToUI = [PhotoImage]()
+  var dataToUI = [ModelToUI]()
   
   @IBOutlet weak var startTextLabel: UILabel!
   @IBOutlet weak var tableView: UITableView!
@@ -28,7 +28,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+    //print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
     
     tableView.rowHeight = 310
     tableView.delegate = self
@@ -36,6 +36,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     pickerController.delegate = self
     pickerController.sourceType = .camera // Then camera
     pickerController.allowsEditing = true
+    
+    load()
   
   }
   
@@ -147,9 +149,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
   
   func save (){
     do{
-     try  context.save()
-      print("Success save data to database")
-      //tableView.reloadData()
+      
+//      let starttime = Date().millisecondsSince1970
+//      print(starttime)
+      try  context.save()
+//      let endtime = Date().millisecondsSince1970
+//      print("\(endtime - starttime)")
+      tableView.reloadData()
     }catch{
       
     }
@@ -159,16 +165,27 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
   func load (){
     let request: NSFetchRequest<PhotoImage> = PhotoImage.fetchRequest()
     do{
-      dataToUI = try context.fetch(request)
+      let data = try context.fetch(request)
       print("Success load data from database")
-      
-      DispatchQueue.main.async {
-        self.tableView.reloadData()
+      var photo = [ModelToUI]()
+      for item in data {
+        if let name = item.name {
+          guard let loadPhoto = loadImageFromDiskWith(fileName: name) else { return }
+          let model = ModelToUI(image: loadPhoto, string: item)
+          photo.append(model)
+        }
+        dataToUI = photo
+        
       }
+     
+//      DispatchQueue.main.async {
+//        self.tableView.reloadData()
+//      }
     }catch {
 
     }
   }
+  
   
 }
 
@@ -176,15 +193,25 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return fotoImage.count
+    //return fotoImage.count
+    return dataToUI.count
    
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! Cell
-    cell.photoImage.image = fotoImage[indexPath.row]
-    //cell.label.text = ""
+    cell.photoImage.image = dataToUI[indexPath.row].image
+    cell.label.text = dataToUI[indexPath.row].textToImage?.phrase
     return cell
   }
 }
 
+extension Date {
+    var millisecondsSince1970:Int64 {
+        return Int64((self.timeIntervalSince1970 * 1000.0).rounded())
+    }
+
+    init(milliseconds:Int64) {
+        self = Date(timeIntervalSince1970: TimeInterval(milliseconds) / 1000)
+    }
+}
