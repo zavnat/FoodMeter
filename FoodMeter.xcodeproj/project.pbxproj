@@ -18,9 +18,13 @@
 		8498C4B224ACE517004575FE /* Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8498C4B024ACE517004575FE /* Cell.swift */; };
 		8498C4BC24AD1F45004575FE /* FoodMeter.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8498C4BA24AD1F45004575FE /* FoodMeter.xcdatamodeld */; };
 		8498C4BE24AE0B8D004575FE /* ModelToUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8498C4BD24AE0B8D004575FE /* ModelToUI.swift */; };
+		A11C9EA6B67CCCC3EB6474CE /* Pods_FoodMeter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60284147F513EEEE0CF0B1F5 /* Pods_FoodMeter.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		085471C28C3301783B9C4635 /* Pods-FoodMeter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FoodMeter.debug.xcconfig"; path = "Target Support Files/Pods-FoodMeter/Pods-FoodMeter.debug.xcconfig"; sourceTree = "<group>"; };
+		2339FBAE0B5980571F054F9F /* Pods-FoodMeter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FoodMeter.release.xcconfig"; path = "Target Support Files/Pods-FoodMeter/Pods-FoodMeter.release.xcconfig"; sourceTree = "<group>"; };
+		60284147F513EEEE0CF0B1F5 /* Pods_FoodMeter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FoodMeter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		843CE65024AB6DA60095ED53 /* FoodMeter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FoodMeter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		843CE65324AB6DA60095ED53 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		843CE65524AB6DA60095ED53 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -41,6 +45,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A11C9EA6B67CCCC3EB6474CE /* Pods_FoodMeter.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -52,6 +57,8 @@
 			children = (
 				843CE65224AB6DA60095ED53 /* FoodMeter */,
 				843CE65124AB6DA60095ED53 /* Products */,
+				BA740575AAA8B653FA64E924 /* Pods */,
+				BB1EF14343F46D35F6928F53 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -82,6 +89,24 @@
 			path = FoodMeter;
 			sourceTree = "<group>";
 		};
+		BA740575AAA8B653FA64E924 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				085471C28C3301783B9C4635 /* Pods-FoodMeter.debug.xcconfig */,
+				2339FBAE0B5980571F054F9F /* Pods-FoodMeter.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		BB1EF14343F46D35F6928F53 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				60284147F513EEEE0CF0B1F5 /* Pods_FoodMeter.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -89,9 +114,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 843CE66424AB6DAB0095ED53 /* Build configuration list for PBXNativeTarget "FoodMeter" */;
 			buildPhases = (
+				9B0955751D6B9E439D8BAA75 /* [CP] Check Pods Manifest.lock */,
 				843CE64C24AB6DA60095ED53 /* Sources */,
 				843CE64D24AB6DA60095ED53 /* Frameworks */,
 				843CE64E24AB6DA60095ED53 /* Resources */,
+				35530ACD760FC74003AA771A /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -147,6 +174,48 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		35530ACD760FC74003AA771A /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-FoodMeter/Pods-FoodMeter-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-FoodMeter/Pods-FoodMeter-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FoodMeter/Pods-FoodMeter-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9B0955751D6B9E439D8BAA75 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-FoodMeter-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		843CE64C24AB6DA60095ED53 /* Sources */ = {
@@ -302,6 +371,7 @@
 		};
 		843CE66524AB6DAB0095ED53 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 085471C28C3301783B9C4635 /* Pods-FoodMeter.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -320,6 +390,7 @@
 		};
 		843CE66624AB6DAB0095ED53 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2339FBAE0B5980571F054F9F /* Pods-FoodMeter.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;

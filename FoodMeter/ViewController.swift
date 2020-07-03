@@ -10,13 +10,14 @@ import UIKit
 import CoreML
 import Vision
 import CoreData
+import Kingfisher
 
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
   
   let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
   
-  var dataToUI = [ModelToUI]()
+  var dataToUI = [PhotoImage]()
   
   @IBOutlet weak var startTextLabel: UILabel!
   @IBOutlet weak var tableView: UITableView!
@@ -34,7 +35,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     tableView.delegate = self
     tableView.dataSource = self
     pickerController.delegate = self
-    pickerController.sourceType = .photoLibrary// Then camera
+    pickerController.sourceType = .camera// Then camera
     pickerController.allowsEditing = true
     
     
@@ -59,6 +60,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
       }
       let phrase = detectFood(with: ciimage)
       
+      
       let myPhotoWithPhrase = PhotoImage(context: context)
       myPhotoWithPhrase.phrase = phrase
       myPhotoWithPhrase.name = fotoName
@@ -72,9 +74,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
   
   
   
-  func detectFood (with image: CIImage) -> String {
+  func detectFood (with image: CIImage) -> String? {
     
-    var funPhrase = ""
+    var phrase: String?
     
     guard let model = try? VNCoreMLModel(for: MealClassifier().model) else {fatalError("Loading CoreML Model Failed")}
     
@@ -83,7 +85,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
       //      print(result.confidence)
       //      print(result.identifier)
       
-      funPhrase = result.identifier
+      phrase = result.identifier
+      //print(result.identifier)
       
     }
     DispatchQueue.global(qos: .userInitiated).async{
@@ -95,7 +98,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         print(error)
       }
     }
-    return funPhrase
+    return phrase
   }
   
     @IBAction func cameraPressed(_ sender: UIBarButtonItem) {
@@ -132,7 +135,21 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 
   
   
-  func loadImageFromDiskWith(fileName: String) -> UIImage? {
+  func loadImageFromDiskWithNew(fileName: String) -> URL? {
+    
+    let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
+    
+    let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
+    let paths = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
+    
+    if let dirPath = paths.first {
+      let imageUrl = URL(fileURLWithPath: dirPath).appendingPathComponent(fileName)
+      return imageUrl
+    }
+    return nil
+  }
+  
+  func loadImageFromDiskWithOld(fileName: String) -> UIImage? {
     
     let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
     
@@ -142,10 +159,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     if let dirPath = paths.first {
       let imageUrl = URL(fileURLWithPath: dirPath).appendingPathComponent(fileName)
       let image = UIImage(contentsOfFile: imageUrl.path)
+      
+      
       return image
       
     }
-    
     return nil
   }
   
@@ -172,17 +190,18 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     do{
       let data = try context.fetch(request)
       print("Success load data from database")
-      var photo = [ModelToUI]()
-      for item in data {
-        if let name = item.name {
-          print(name)
-          guard let loadPhoto = loadImageFromDiskWith(fileName: name) else { return }
-          let model = ModelToUI(image: loadPhoto, string: item)
-          photo.append(model)
-        }
-        dataToUI = photo
+      dataToUI = data
+//      var photo = [ModelToUI]()
+//      for item in data {
+//        if let name = item.name {
+//          print(name)
+//          guard let loadPhoto = loadImageFromDiskWith(fileName: name) else { return }
+//          let model = ModelToUI(image: loadPhoto, string: item)
+//          photo.append(model)
+//        }
+//        dataToUI = photo
         
-      }
+      //}
      
       DispatchQueue.main.async {
         self.tableView.reloadData()
@@ -205,11 +224,28 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! Cell
-    cell.photoImage.image = dataToUI[indexPath.row].image
-    cell.label.text = dataToUI[indexPath.row].textToImage?.phrase
-    cell.cellDelegate = self
-    cell.imageToShare = dataToUI[indexPath.row].image
-  
+    //    cell.photoImage.image = dataToUI[indexPath.row].image
+    //    cell.label.text = dataToUI[indexPath.row].textToImage?.phrase
+    //    cell.cellDelegate = self
+    //    cell.imageToShare = dataToUI[indexPath.row].image
+   
+    
+    if let name = dataToUI[indexPath.row].name {
+      let starttime = Date().millisecondsSince1970
+      let url = loadImageFromDiskWithNew(fileName: name)
+      
+      if(url != nil){
+         cell.photoImage.kf.setImage(with: url)
+      }
+//
+//      cell.photoImage.image = loadImageFromDiskWithOld(fileName: name)
+      let endtime = Date().millisecondsSince1970
+      print("Time for loading image -  \(endtime - starttime)")
+    }
+    cell.label.text = dataToUI[indexPath.row].phrase
+//    print(dataToUI[indexPath.row].phrase!)
+    
+    
     return cell
   }
 }
