@@ -37,81 +37,89 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     pickerController.delegate = self
     pickerController.sourceType = .camera// Then camera
     pickerController.allowsEditing = true
-    
-    
+   
     load()
   
+  }
+  
+  var getDate: String {
+    let date = Date()
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
+    let fotoName = formatter.string(from: date)
+    return fotoName
   }
   
   func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
     if let pickedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
       fotoImage.append(pickedImage)
       
+      let date = getDate
       
-      let date = Date()
-      let formatter = DateFormatter()
-      formatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
-      let fotoName = formatter.string(from: date)
-      saveImage(imageName: fotoName, image: pickedImage)
+      saveImage(photoDate: date, image: pickedImage)
       
-      
-      
-      guard let ciimage = CIImage(image: pickedImage) else {fatalError("Could not convert to CIImage")
-      }
-      let phrase = detectFood(with: ciimage)
-      
-      
-      let myPhotoWithPhrase = PhotoImage(context: context)
-      myPhotoWithPhrase.phrase = phrase
-      myPhotoWithPhrase.name = fotoName
+      detectFood(photoDate: date, with: pickedImage)
       
     }
     pickerController.dismiss(animated: true, completion: nil)
+    
+    
+  }
+  
+  func saveToDatabase(with text: String, date: String){
+    let myPhotoWithPhrase = PhotoImage(context: context)
+    myPhotoWithPhrase.phrase = text
+    myPhotoWithPhrase.name = date
+    
     save()
     load()
     
   }
   
-  
-  
-  func detectFood (with image: CIImage) -> String? {
+  func detectFood (photoDate: String, with image: UIImage) {
     
-    var phrase: String?
-    
+    guard let ciimage = CIImage(image: image) else {fatalError("Could not convert to CIImage")
+    }
+ 
     guard let model = try? VNCoreMLModel(for: MealClassifier().model) else {fatalError("Loading CoreML Model Failed")}
-    
+//    print("1")
     let request = VNCoreMLRequest(model: model) { (request, error) in
       guard let result = request.results?.first as? VNClassificationObservation else {fatalError("Model failed to process image ")}
       //      print(result.confidence)
       //      print(result.identifier)
       
-      phrase = result.identifier
-      //print(result.identifier)
+      let phrase = result.identifier
+      self.saveToDatabase(with: phrase, date: photoDate)
       
+      //print(result.identifier)
+//      print("3")
     }
     DispatchQueue.global(qos: .userInitiated).async{
-      let handler = VNImageRequestHandler(ciImage: image)
-      
+      let handler = VNImageRequestHandler(ciImage: ciimage)
+//      print("2")
       do {
         try handler.perform([request])
       } catch {
         print(error)
       }
     }
-    return phrase
+//    print("4")
+    
   }
+  
+  
+  
   
     @IBAction func cameraPressed(_ sender: UIBarButtonItem) {
       present(pickerController, animated: true, completion: nil)
     }
   
   
-  func saveImage(imageName: String, image: UIImage) {
+  func saveImage(photoDate: String, image: UIImage) {
     
     guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
     
-    let fileName = imageName
-    let fileURL = documentsDirectory.appendingPathComponent(fileName)
+    let fileURL = documentsDirectory.appendingPathComponent(photoDate)
     guard let data = image.jpegData(compressionQuality: 1) else { return }
     
     //Checks if file exists, removes it if so.
@@ -176,7 +184,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
       try  context.save()
 //      let endtime = Date().millisecondsSince1970
 //      print("\(endtime - starttime)")
-      tableView.reloadData()
+//      DispatchQueue.main.async {
+//        self.tableView.reloadData()
+//      }
     }catch{
       
     }
