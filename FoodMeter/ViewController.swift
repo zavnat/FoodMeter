@@ -167,12 +167,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
   
   func load (){
     let request: NSFetchRequest<PhotoImage> = PhotoImage.fetchRequest()
+    let sort = NSSortDescriptor(key: "name", ascending: false)
+    request.sortDescriptors = [sort]
     do{
       let data = try context.fetch(request)
       print("Success load data from database")
       var photo = [ModelToUI]()
       for item in data {
         if let name = item.name {
+          print(name)
           guard let loadPhoto = loadImageFromDiskWith(fileName: name) else { return }
           let model = ModelToUI(image: loadPhoto, string: item)
           photo.append(model)
@@ -210,6 +213,9 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     return cell
   }
 }
+
+
+
 
 extension Date {
     var millisecondsSince1970:Int64 {
