@@ -41,7 +41,7 @@
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="99u-DF-5c1">
-                                                    <rect key="frame" x="0.0" y="267" width="210" height="40"/>
+                                                    <rect key="frame" x="0.0" y="267" width="177" height="40"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="40" id="Aid-HJ-jPT"/>
                                                     </constraints>
@@ -49,8 +49,16 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KzJ-en-Ctu">
+                                                    <rect key="frame" x="213" y="327" width="45" height="22"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <state key="normal" image="trash" catalog="system"/>
+                                                    <connections>
+                                                        <action selector="deleteButtonPressed:" destination="dYo-Ys-0FD" eventType="touchUpInside" id="DgM-ff-4yM"/>
+                                                    </connections>
+                                                </button>
                                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tjk-7w-N4p">
-                                                    <rect key="frame" x="319" y="257" width="46" height="37"/>
+                                                    <rect key="frame" x="330" y="319" width="46" height="37"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                     <state key="normal" image="square.and.arrow.up" catalog="system"/>
@@ -122,5 +130,6 @@
     <resources>
         <image name="images" width="100" height="67.5"/>
         <image name="square.and.arrow.up" catalog="system" width="115" height="128"/>
+        <image name="trash" catalog="system" width="121" height="128"/>
     </resources>
 </document>

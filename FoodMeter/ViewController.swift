@@ -19,6 +19,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
   
   var dataToUI = [PhotoImage]()
   
+  
+  
   @IBOutlet weak var startTextLabel: UILabel!
   @IBOutlet weak var tableView: UITableView!
   
@@ -154,8 +156,34 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
       let imageUrl = URL(fileURLWithPath: dirPath).appendingPathComponent(fileName)
       return imageUrl
     }
+    
     return nil
   }
+  
+  
+  func deleteFromFile(fileName: String) {
+    print("delete from file")
+      let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
+      
+      let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
+      let paths = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
+      
+      if let dirPath = paths.first {
+        let imageUrl = URL(fileURLWithPath: dirPath).appendingPathComponent(fileName)
+       
+        do {
+            try FileManager.default.removeItem(at: imageUrl)
+            print("File deleted")
+        }
+        catch {
+            print("Error")
+        }
+      }
+   
+      
+      
+  }
+  
   
   func loadImageFromDiskWithOld(fileName: String) -> UIImage? {
     
@@ -221,6 +249,28 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
   }
   
+  
+  func deleteImage(name: String) {
+   
+    print("deete image")
+      let fetchRequest: NSFetchRequest<PhotoImage> = PhotoImage.fetchRequest()
+      fetchRequest.predicate = NSPredicate(format: "name = %@", name)
+      let request = NSBatchDeleteRequest(fetchRequest: fetchRequest as! NSFetchRequest<NSFetchRequestResult>)
+
+      do {
+          try context.execute(request)
+          try context.save()
+        print("delete success")
+      } catch {
+          print ("There was an error")
+      }
+    deleteFromFile(fileName: name)
+     load()
+     tableView.reloadData()
+  }
+  
+  
+  
 }
 
 
@@ -237,7 +287,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     //    cell.photoImage.image = dataToUI[indexPath.row].image
     //    cell.label.text = dataToUI[indexPath.row].textToImage?.phrase
     //    cell.cellDelegate = self
-    //    cell.imageToShare = dataToUI[indexPath.row].image
+    cell.itemData = dataToUI[indexPath.row]
+    cell.cellDelegate = self
    
     
     if let name = dataToUI[indexPath.row].name {
@@ -274,19 +325,21 @@ extension Date {
 }
 
 extension ViewController: TableViewCell {
-  func sharePhoto(photo: UIImage) {
-    let activityController = UIActivityViewController(activityItems: [photo], applicationActivities: nil)
-    activityController.completionWithItemsHandler = {(nil,completed,_,error) in
-      if completed {
-        print("completed")
-      }else {
-        print("cancled")
+  func sharePhoto(photoUrl: String) {
+    print("share photo")
+    let photo = loadImageFromDiskWithNew(fileName: photoUrl)
+    if let imagePhoto = photo {
+      let activityController = UIActivityViewController(activityItems: [imagePhoto], applicationActivities: nil)
+      activityController.completionWithItemsHandler = {(nil,completed,_,error) in
+        if completed {
+          print("completed")
+        }else {
+          print("cancled")
+        }
       }
+      present(activityController, animated: true)
     }
-    present(activityController, animated: true)
   }
-  
-  
   
   
 }
