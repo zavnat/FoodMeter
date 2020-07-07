@@ -28,8 +28,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   }
 
   func sceneDidBecomeActive(_ scene: UIScene) {
-    // Called when the scene has moved from an inactive state to an active state.
-    // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
+      // Is there a shortcut item that has not yet been processed?
+      if let shortcutItem = (UIApplication.shared.delegate as! AppDelegate).shortcutItemToProcess {
+        switch shortcutItem.type{
+        case "camera":
+            let nc = NotificationCenter.default
+              nc.post(name: .QuickActionCamera, object: nil)
+
+            (UIApplication.shared.delegate as! AppDelegate).shortcutItemToProcess = nil
+        
+        default:
+            print("incorrect shortcutItem.type")
+        }
+      }
   }
 
   func sceneWillResignActive(_ scene: UIScene) {
@@ -49,5 +60,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   }
 
 
-}
+  func windowScene(_ windowScene: UIWindowScene, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
+      // When the user opens the app through a quick action, this is now the method that will be called
+      (UIApplication.shared.delegate as! AppDelegate).shortcutItemToProcess = shortcutItem
+    print("window scene")
+  }
+
+      
+      
+       
+      
+    }
+
+
+
 

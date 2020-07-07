@@ -13,6 +13,8 @@ import CoreData
 import Kingfisher
 
 
+
+
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
   
   let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -26,13 +28,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
   
   var fotoImage = [UIImage]()
 
-  private let pickerController = UIImagePickerController()
+  var pickerController = UIImagePickerController()
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
     //print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
-    
     tableView.rowHeight = 360
     tableView.delegate = self
     tableView.dataSource = self
@@ -41,8 +42,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     pickerController.allowsEditing = true
    
     load()
-  
+    
+    NotificationCenter.default.addObserver(self, selector: #selector(reactToNotification(_:)), name: .QuickActionCamera, object: nil)
   }
+  
+  @objc func reactToNotification(_ sender: Notification) {
+    openCamera()
+  }
+
   
   var getDate: String {
     let date = Date()
@@ -106,15 +113,19 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
       }
     }
 //    print("4")
-    
   }
   
   
-  
-  
-    @IBAction func cameraPressed(_ sender: UIBarButtonItem) {
+ 
+    @IBAction func cameraPressed(_ sender: UIButton) {
       present(pickerController, animated: true, completion: nil)
     }
+  
+  func openCamera(){
+    present(pickerController, animated: true, completion: nil)
+  }
+  
+  
   
   
   func saveImage(photoDate: String, image: UIImage) {
