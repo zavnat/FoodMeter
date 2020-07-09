@@ -8,25 +8,19 @@
 
 import UIKit
 
-protocol TableViewCell {
+protocol TableViewCellDelegate {
   func sharePhoto(photoUrl: String)
   func deleteImage(name: String)
 }
 
 class Cell: UITableViewCell {
-
-  var cellDelegate: TableViewCell?
+  
+  var cellDelegate: TableViewCellDelegate?
   var itemData: PhotoImage?
-
+  
   @IBOutlet weak var photoImage: UIImageView!
   @IBOutlet weak var label: UILabel!
   
-  
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
   
   @IBAction func shareButtonPressed(_ sender: UIButton) {
     print("share pressed")
