@@ -86,6 +86,7 @@ class ViewModel {
     let request = VNCoreMLRequest(model: model) { (request, error) in
       guard let result = request.results?.first as? VNClassificationObservation else {fatalError("Model failed to process image ")}
       
+      
       let phrase = result.identifier
       self.repository.saveDataToDatabase(with: phrase, date: photoDate)
       self.load()

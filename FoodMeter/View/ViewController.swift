@@ -26,9 +26,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    //print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+    print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
     
     tableView.rowHeight = 360
+//    tableView.backgroundColor = UIColor.lightGray
     tableView.delegate = self
     tableView.dataSource = self
     pickerController.delegate = self
@@ -39,6 +40,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     NotificationCenter.default.addObserver(self, selector: #selector(reactToNotification(_:)), name: .QuickActionCamera, object: nil)
   }
+  
+  
   
   
   @objc func reactToNotification(_ sender: Notification) {
@@ -66,15 +69,21 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
   func openCamera(){
     present(pickerController, animated: true, completion: nil)
   }
-  
+ 
   
   private func setupViewModel() {
     
     viewModel.didUpdateDataToUI = { [weak self] data in
       guard let strongSelf = self else { return }
       strongSelf.dataToUI = data
-      DispatchQueue.main.async {
-        strongSelf.tableView.reloadData()
+      if data.count == 0 {
+        strongSelf.tableView.isHidden = true
+      } else {
+        DispatchQueue.main.async {
+          strongSelf.tableView.isHidden = false
+          strongSelf.tableView.reloadData()
+        }
+        
       }
     }
   }
@@ -100,7 +109,9 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
       let url = viewModel.loadImageFromFile(fileName: name)
       
       if(url != nil){
-        cell.photoImage.kf.setImage(with: url)
+        
+        let processor = RoundCornerImageProcessor(cornerRadius: 20)
+        cell.photoImage.kf.setImage(with: url, options: [.processor(processor)])
       }
     }
     cell.label.text = dataToUI[indexPath.row].phrase
@@ -108,6 +119,10 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     
     return cell
+  }
+  
+  func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+      cell.backgroundColor = UIColor.clear
   }
 }
 
