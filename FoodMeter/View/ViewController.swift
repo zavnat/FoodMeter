@@ -28,12 +28,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
     
-    tableView.rowHeight = 360
+//    tableView.rowHeight = 360
 //    tableView.backgroundColor = UIColor.lightGray
     tableView.delegate = self
     tableView.dataSource = self
     pickerController.delegate = self
-    pickerController.sourceType = .camera// Then camera
+    pickerController.sourceType = .photoLibrary// Then camera
     pickerController.allowsEditing = true
     setupViewModel()
     viewModel.load()
@@ -92,33 +92,51 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 
 //MARK: - TableView Methods
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
+  
+  func numberOfSections(in tableView: UITableView) -> Int {
+    return 2
+  }
+  
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return dataToUI.count
+    if section == 0 {
+      return 1
+    } else if section == 1 {
+      return dataToUI.count
+    }
+    return 0
     
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! Cell
     
-    cell.itemData = dataToUI[indexPath.row]
-    cell.cellDelegate = self
-    
-    
-    if let name = dataToUI[indexPath.row].name {
-      //      let starttime = Date().millisecondsSince1970
-      let url = viewModel.loadImageFromFile(fileName: name)
+    if indexPath.section == 0 {
+      let cell = tableView.dequeueReusableCell(withIdentifier: "detailCell", for: indexPath) as! DetailCell
+      return cell
+    } else {
+      let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! Cell
       
-      if(url != nil){
+      cell.itemData = dataToUI[indexPath.row]
+      cell.cellDelegate = self
+      
+      
+      if let name = dataToUI[indexPath.row].name {
+        //      let starttime = Date().millisecondsSince1970
+        let url = viewModel.loadImageFromFile(fileName: name)
         
-        let processor = RoundCornerImageProcessor(cornerRadius: 20)
-        cell.photoImage.kf.setImage(with: url, options: [.processor(processor)])
+        if(url != nil){
+          
+          let processor = RoundCornerImageProcessor(cornerRadius: 20)
+          cell.photoImage.kf.setImage(with: url, options: [.processor(processor)])
+        }
       }
+      cell.label.text = dataToUI[indexPath.row].phrase
+      //    print(dataToUI[indexPath.row].phrase!)
+      
+      
+      return cell
     }
-    cell.label.text = dataToUI[indexPath.row].phrase
-    //    print(dataToUI[indexPath.row].phrase!)
     
     
-    return cell
   }
   
   func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
