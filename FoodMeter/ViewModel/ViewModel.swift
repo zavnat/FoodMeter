@@ -39,8 +39,8 @@ class ViewModel {
   
   func load(){
     repository.loadFromDatabase { [weak self] data in
-      guard let strongSelf  = self else { return }
-      strongSelf.updateData(with: data)
+      guard let self = self else { return }
+      self.updateData(with: data)
     }
   }
   

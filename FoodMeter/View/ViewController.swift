@@ -74,14 +74,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
   private func setupViewModel() {
     
     viewModel.didUpdateDataToUI = { [weak self] data in
-      guard let strongSelf = self else { return }
-      strongSelf.dataToUI = data
+      guard let self = self else { return }
+      self.dataToUI = data
       if data.count == 0 {
-        strongSelf.tableView.isHidden = true
+        self.tableView.isHidden = true
       } else {
         DispatchQueue.main.async {
-          strongSelf.tableView.isHidden = false
-          strongSelf.tableView.reloadData()
+          self.tableView.isHidden = false
+          self.tableView.reloadData()
         }
         
       }
@@ -117,6 +117,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
       
       cell.itemData = dataToUI[indexPath.row]
       cell.cellDelegate = self
+      cell.view.layer.cornerRadius = 10
       
       
       if let name = dataToUI[indexPath.row].name {
@@ -137,11 +138,15 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     
+    
+    
   }
   
   func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
       cell.backgroundColor = UIColor.clear
   }
+  
+  
 }
 
 
@@ -160,8 +165,25 @@ extension Date {
 
 //MARK: - TableViewCellDelegate Methods
 extension ViewController: TableViewCellDelegate {
+  
+  
+  
   func deleteImage(name: String) {
-    viewModel.delete(name: name)
+    
+    let alert = UIAlertController(title: "Разрешить приложению удалить это фото?", message: "", preferredStyle: .alert)
+
+    let cancelAction = UIAlertAction(title: "Не разрешать", style: .cancel, handler: nil)
+
+    let deleteAction = UIAlertAction(title: "Удалить", style: .destructive) { [weak self] _ in
+      guard let self = self else { return }
+      self.viewModel.delete(name: name)
+    }
+
+    alert.addAction(cancelAction)
+    alert.addAction(deleteAction)
+
+    present(alert, animated: true, completion: nil)
+  
   }
   
   func sharePhoto(photoUrl: String) {

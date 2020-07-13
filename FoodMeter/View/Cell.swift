@@ -15,6 +15,7 @@ protocol TableViewCellDelegate {
 
 class Cell: UITableViewCell {
   
+  @IBOutlet weak var view: UIView!
   var cellDelegate: TableViewCellDelegate?
   var itemData: PhotoImage?
   
