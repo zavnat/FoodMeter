@@ -3,8 +3,9 @@
     <entity name="PhotoImage" representedClassName=".PhotoImage" syncable="YES" codeGenerationType="class">
         <attribute name="name" attributeType="String"/>
         <attribute name="phrase" attributeType="String"/>
+        <attribute name="type" optional="YES" attributeType="String"/>
     </entity>
     <elements>
-        <element name="PhotoImage" positionX="-45" positionY="0" width="128" height="73"/>
+        <element name="PhotoImage" positionX="-45" positionY="0" width="128" height="88"/>
     </elements>
 </model>

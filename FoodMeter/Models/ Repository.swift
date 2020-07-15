@@ -11,24 +11,59 @@ import UIKit
 import CoreData
 
 
-protocol RepositoryService {
-  func loadFromDatabase(completion: @escaping ([PhotoImage]) -> ())
-}
+//protocol RepositoryService {
+//  func fetchData (completion: @escaping ([PhotoImage], String) -> ())
+//}
 
 
 
-class Repository: RepositoryService {
-  
+class Repository {
+ 
   let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
   
-  func saveDataToDatabase(with text: String, date: String){
+  
+  func fetchData (completion: @escaping ([PhotoImage]) -> ()) {
+     let request: NSFetchRequest<PhotoImage> = PhotoImage.fetchRequest()
+     let sort = NSSortDescriptor(key: "name", ascending: false)
+     request.sortDescriptors = [sort]
+     do{
+       let data = try context.fetch(request)
+       print("Success load data from database")
+       completion(data)
+       
+     }catch {
+       print("Error context fetch data")
+     }
+   }
+  
+  
+  func foodCount(_ type: Int) -> Int {
+    let type = String(type)
+    let request : NSFetchRequest<PhotoImage> = PhotoImage.fetchRequest()
+    request.predicate = NSPredicate(format: "type = %@", type)
+    request.resultType = .countResultType
+    
+    do{
+      if let result = (try context.execute(request) as? NSAsynchronousFetchResult<NSNumber>)?.finalResult?.first as? Int {
+        print("Success load count from database")
+        return result
+      }
+    }catch {
+      print("Error context load count from database")
+    }
+    return 0
+  }
+  
+  
+  
+  func saveDataToDatabase(with text: String, date: String, type: String){
     let myPhotoWithPhrase = PhotoImage(context: context)
     myPhotoWithPhrase.phrase = text
     myPhotoWithPhrase.name = date
+    myPhotoWithPhrase.type = type
     
     saveToDatabase()
   }
-  
   
   //MARK:- Work with Database
   func saveToDatabase (){
@@ -38,21 +73,7 @@ class Repository: RepositoryService {
       
     }
   }
-  
-  func loadFromDatabase (completion: @escaping ([PhotoImage]) -> ()) {
-    let request: NSFetchRequest<PhotoImage> = PhotoImage.fetchRequest()
-    let sort = NSSortDescriptor(key: "name", ascending: false)
-    request.sortDescriptors = [sort]
-    do{
-      let data = try context.fetch(request)
-      print("Success load data from database")
-      completion(data)
-      
-    }catch {
-      print("Error context fetch data")
-    }
-  }
-  
+
   
   func deleteFromDatabase(name: String){
     let fetchRequest: NSFetchRequest<PhotoImage> = PhotoImage.fetchRequest()

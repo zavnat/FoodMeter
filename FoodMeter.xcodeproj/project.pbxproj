@@ -93,10 +93,10 @@
 		8498C4E624B60283004575FE /* View */ = {
 			isa = PBXGroup;
 			children = (
-				843CE65724AB6DA60095ED53 /* ViewController.swift */,
 				843CE65924AB6DA60095ED53 /* Main.storyboard */,
-				8498C51B24BB4FCF004575FE /* DetailCell.swift */,
 				8498C4B024ACE517004575FE /* Cell.swift */,
+				8498C51B24BB4FCF004575FE /* DetailCell.swift */,
+				843CE65724AB6DA60095ED53 /* ViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";

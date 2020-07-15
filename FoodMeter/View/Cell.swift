@@ -14,13 +14,12 @@ protocol TableViewCellDelegate {
 }
 
 class Cell: UITableViewCell {
-  
-  @IBOutlet weak var view: UIView!
   var cellDelegate: TableViewCellDelegate?
   var itemData: PhotoImage?
   
   @IBOutlet weak var photoImage: UIImageView!
   @IBOutlet weak var label: UILabel!
+  @IBOutlet weak var view: UIView!
   
   
   @IBAction func shareButtonPressed(_ sender: UIButton) {
