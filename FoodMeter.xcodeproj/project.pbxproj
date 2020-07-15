@@ -13,13 +13,12 @@
 		843CE65B24AB6DA60095ED53 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 843CE65924AB6DA60095ED53 /* Main.storyboard */; };
 		843CE65D24AB6DAB0095ED53 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 843CE65C24AB6DAB0095ED53 /* Assets.xcassets */; };
 		843CE66024AB6DAB0095ED53 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 843CE65E24AB6DAB0095ED53 /* LaunchScreen.storyboard */; };
-		843CE66C24AB81290095ED53 /* FoodClassifier.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 843CE66B24AB81290095ED53 /* FoodClassifier.mlmodel */; };
-		8498C4AB24ABCE87004575FE /* MealClassifier.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 8498C4AA24ABCE87004575FE /* MealClassifier.mlmodel */; };
 		8498C4B224ACE517004575FE /* Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8498C4B024ACE517004575FE /* Cell.swift */; };
 		8498C4BC24AD1F45004575FE /* FoodMeter.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8498C4BA24AD1F45004575FE /* FoodMeter.xcdatamodeld */; };
 		8498C4E924B60322004575FE /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8498C4E824B60322004575FE /* ViewModel.swift */; };
 		8498C4EE24B65563004575FE /*  Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8498C4ED24B65563004575FE /*  Repository.swift */; };
 		8498C51C24BB4FCF004575FE /* DetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8498C51B24BB4FCF004575FE /* DetailCell.swift */; };
+		8498C51E24BF8F9B004575FE /* MealClassifier.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 8498C51D24BF8F9B004575FE /* MealClassifier.mlmodel */; };
 		A11C9EA6B67CCCC3EB6474CE /* Pods_FoodMeter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60284147F513EEEE0CF0B1F5 /* Pods_FoodMeter.framework */; };
 /* End PBXBuildFile section */
 
@@ -35,13 +34,12 @@
 		843CE65C24AB6DAB0095ED53 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		843CE65F24AB6DAB0095ED53 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		843CE66124AB6DAB0095ED53 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		843CE66B24AB81290095ED53 /* FoodClassifier.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = FoodClassifier.mlmodel; sourceTree = "<group>"; };
-		8498C4AA24ABCE87004575FE /* MealClassifier.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = MealClassifier.mlmodel; sourceTree = "<group>"; };
 		8498C4B024ACE517004575FE /* Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cell.swift; sourceTree = "<group>"; };
 		8498C4BB24AD1F45004575FE /* FoodMeter.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = FoodMeter.xcdatamodel; sourceTree = "<group>"; };
 		8498C4E824B60322004575FE /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		8498C4ED24B65563004575FE /*  Repository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = " Repository.swift"; sourceTree = "<group>"; };
 		8498C51B24BB4FCF004575FE /* DetailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailCell.swift; sourceTree = "<group>"; };
+		8498C51D24BF8F9B004575FE /* MealClassifier.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = MealClassifier.mlmodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,9 +110,8 @@
 		8498C4EA24B60340004575FE /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				8498C51D24BF8F9B004575FE /* MealClassifier.mlmodel */,
 				8498C4ED24B65563004575FE /*  Repository.swift */,
-				8498C4AA24ABCE87004575FE /* MealClassifier.mlmodel */,
-				843CE66B24AB81290095ED53 /* FoodClassifier.mlmodel */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -253,13 +250,12 @@
 			files = (
 				8498C51C24BB4FCF004575FE /* DetailCell.swift in Sources */,
 				8498C4EE24B65563004575FE /*  Repository.swift in Sources */,
-				8498C4AB24ABCE87004575FE /* MealClassifier.mlmodel in Sources */,
 				843CE65824AB6DA60095ED53 /* ViewController.swift in Sources */,
 				843CE65424AB6DA60095ED53 /* AppDelegate.swift in Sources */,
 				8498C4B224ACE517004575FE /* Cell.swift in Sources */,
 				843CE65624AB6DA60095ED53 /* SceneDelegate.swift in Sources */,
-				843CE66C24AB81290095ED53 /* FoodClassifier.mlmodel in Sources */,
 				8498C4E924B60322004575FE /* ViewModel.swift in Sources */,
+				8498C51E24BF8F9B004575FE /* MealClassifier.mlmodel in Sources */,
 				8498C4BC24AD1F45004575FE /* FoodMeter.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
