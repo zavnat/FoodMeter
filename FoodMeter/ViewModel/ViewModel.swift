@@ -13,6 +13,7 @@ import CoreData
 import UIKit
 
 class ViewModel {
+   
   var repository = Repository()
   var didUpdateDataToUI: ((Item) -> Void)?
   private(set) var dataToUI: Item = Item(){
@@ -61,7 +62,8 @@ class ViewModel {
       
       let phrase = result.identifier
       let type = self.getType(phrase)
-      self.repository.saveDataToDatabase(with: phrase, date: photoDate, type: type)
+      let comment = self.getComment(phrase)
+      self.repository.saveDataToDatabase(with: phrase, date: photoDate, type: type, comment: comment)
       self.fetch()
     }
     DispatchQueue.global(qos: .userInitiated).async{
@@ -79,11 +81,28 @@ class ViewModel {
      case "Дорогая еда" : return "1"
      case "Дешевая еда" : return "2"
      case "Не еда" : return "3"
+     case "Пища богов" : return "2"
      default:
        print("Other food, incorrect type")
        return ""
      }
    }
+  
+  private func getComment(_ string: String) -> String{
+    let expensive = ["Просто восторг!", "Выглядит очень аппетитно)", "Пальчики оближешь", "Круто, как-будто я сам готовил", "Шикуешь!", "Я бы съел"]
+    let cheap = ["Эмм...ну так", "Вполне вкусно", "Если закрыть глаза, выглядит аппетитно", "С пивком сойдет", "Как в столовке", "Неплохо"]
+    let no = ["А где еда?", "Зубы не поломай", "Я б не съел", "Не надо, не ешь!", "Уж лучше камней поесть"]
+    
+    switch string {
+    case "Дорогая еда" : return expensive.randomElement()!
+    case "Дешевая еда" : return cheap.randomElement()!
+    case "Не еда" : return no.randomElement()!
+    case "Пища богов" : return "Не налегай на это"
+    default:
+      print("Other food, incorrect type")
+      return ""
+    }
+  }
  
   func delete(name: String) {
     repository.deleteFromDatabase(name: name)
@@ -91,7 +110,7 @@ class ViewModel {
     fetch()
   }
   
-  func loadImageFromFile(fileName: String) -> URL? {
+  func getImageURL(fileName: String) -> URL? {
     let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
     let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
     let paths = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
@@ -119,3 +138,5 @@ extension Item {
     self.noFoodCount = noFoodCount
   }
 }
+
+

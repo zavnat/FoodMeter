@@ -24,8 +24,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     tableView.delegate = self
     tableView.dataSource = self
     pickerController.delegate = self
-    pickerController.sourceType = .photoLibrary// Then camera
+    pickerController.sourceType = .camera// Then camera
     pickerController.allowsEditing = true
+    overrideUserInterfaceStyle = .light
     setupViewModel()
     NotificationCenter.default.addObserver(self, selector: #selector(reactToNotification(_:)), name: .QuickActionCamera, object: nil)
   }
@@ -92,16 +93,19 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
       let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! Cell
       cell.itemData = dataToUI.items[indexPath.row]
       cell.cellDelegate = self
-      cell.view.layer.cornerRadius = 10
+      cell.view.layer.cornerRadius = 15
+      cell.photoImage.layer.cornerRadius = 15
+      cell.photoImage.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
       if let name = dataToUI.items[indexPath.row].name {
         //      let starttime = Date().millisecondsSince1970
-        let url = viewModel.loadImageFromFile(fileName: name)
+        let url = viewModel.getImageURL(fileName: name)
         if(url != nil){
           let processor = RoundCornerImageProcessor(cornerRadius: 20)
           cell.photoImage.kf.setImage(with: url, options: [.processor(processor)])
         }
       }
       cell.label.text = dataToUI.items[indexPath.row].phrase
+      cell.commentLabel.text = dataToUI.items[indexPath.row].comment
       return cell
     }
   }
@@ -123,22 +127,10 @@ extension Date {
 
 //MARK: - TableViewCellDelegate Methods
 extension ViewController: TableViewCellDelegate {
-  func deleteImage(name: String) {
-    let alert = UIAlertController(title: "Разрешить приложению удалить это фото?", message: "", preferredStyle: .alert)
-    let cancelAction = UIAlertAction(title: "Не разрешать", style: .cancel, handler: nil)
-    let deleteAction = UIAlertAction(title: "Удалить", style: .destructive) { [weak self] _ in
-      guard let self = self else { return }
-      self.viewModel.delete(name: name)
-    }
-    alert.addAction(cancelAction)
-    alert.addAction(deleteAction)
-    present(alert, animated: true, completion: nil)
-  }
-  
-  func sharePhoto(photoUrl: String) {
-    let photo = viewModel.loadImageFromFile(fileName: photoUrl)
+  func sharePhoto(name: String, phrase: String, comment: String) {
+    let photo = viewModel.getImageURL(fileName: name)
     if let imagePhoto = photo {
-      let activityController = UIActivityViewController(activityItems: [imagePhoto], applicationActivities: nil)
+      let activityController = UIActivityViewController(activityItems: [imagePhoto, phrase, comment], applicationActivities: nil)
       activityController.completionWithItemsHandler = {(nil,completed,_,error) in
         if completed {
           print("completed")
@@ -148,7 +140,21 @@ extension ViewController: TableViewCellDelegate {
       }
       present(activityController, animated: true)
     }
+    
   }
+  
+  func deleteImage(name: String) {
+    let alert = UIAlertController(title: "Удалить это фото?", message: "", preferredStyle: .alert)
+    let cancelAction = UIAlertAction(title: "Отмена", style: .cancel, handler: nil)
+    let deleteAction = UIAlertAction(title: "Удалить", style: .destructive) { [weak self] _ in
+      guard let self = self else { return }
+      self.viewModel.delete(name: name)
+    }
+    alert.addAction(cancelAction)
+    alert.addAction(deleteAction)
+    present(alert, animated: true, completion: nil)
+  }
+  
   
   
 }

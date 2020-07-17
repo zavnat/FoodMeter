@@ -9,7 +9,7 @@
 import UIKit
 
 protocol TableViewCellDelegate {
-  func sharePhoto(photoUrl: String)
+  func sharePhoto(name: String, phrase: String, comment: String)
   func deleteImage(name: String)
 }
 
@@ -19,12 +19,13 @@ class Cell: UITableViewCell {
   
   @IBOutlet weak var photoImage: UIImageView!
   @IBOutlet weak var label: UILabel!
+  @IBOutlet weak var commentLabel: UILabel!
   @IBOutlet weak var view: UIView!
   
   
   @IBAction func shareButtonPressed(_ sender: UIButton) {
     print("share pressed")
-    cellDelegate?.sharePhoto(photoUrl: (itemData?.name)!)
+    cellDelegate?.sharePhoto(name: (itemData?.name)!, phrase: (itemData?.phrase)!, comment: itemData?.comment ?? "")
   }
   
   @IBAction func deleteButtonPressed(_ sender: UIButton) {

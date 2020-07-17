@@ -110,8 +110,8 @@
 		8498C4EA24B60340004575FE /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				8498C51D24BF8F9B004575FE /* MealClassifier.mlmodel */,
 				8498C4ED24B65563004575FE /*  Repository.swift */,
+				8498C51D24BF8F9B004575FE /* MealClassifier.mlmodel */,
 			);
 			path = Models;
 			sourceTree = "<group>";

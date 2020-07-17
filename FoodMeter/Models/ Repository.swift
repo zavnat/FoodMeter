@@ -10,31 +10,23 @@
 import UIKit
 import CoreData
 
-
-//protocol RepositoryService {
-//  func fetchData (completion: @escaping ([PhotoImage], String) -> ())
-//}
-
-
-
 class Repository {
- 
   let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
   
   
   func fetchData (completion: @escaping ([PhotoImage]) -> ()) {
-     let request: NSFetchRequest<PhotoImage> = PhotoImage.fetchRequest()
-     let sort = NSSortDescriptor(key: "name", ascending: false)
-     request.sortDescriptors = [sort]
-     do{
-       let data = try context.fetch(request)
-       print("Success load data from database")
-       completion(data)
-       
-     }catch {
-       print("Error context fetch data")
-     }
-   }
+    let request: NSFetchRequest<PhotoImage> = PhotoImage.fetchRequest()
+    let sort = NSSortDescriptor(key: "name", ascending: false)
+    request.sortDescriptors = [sort]
+    do{
+      let data = try context.fetch(request)
+      print("Success load data from database")
+      completion(data)
+      
+    }catch {
+      print("Error context fetch data")
+    }
+  }
   
   
   func foodCount(_ type: Int) -> Int {
@@ -56,11 +48,12 @@ class Repository {
   
   
   
-  func saveDataToDatabase(with text: String, date: String, type: String){
-    let myPhotoWithPhrase = PhotoImage(context: context)
-    myPhotoWithPhrase.phrase = text
-    myPhotoWithPhrase.name = date
-    myPhotoWithPhrase.type = type
+  func saveDataToDatabase(with text: String, date: String, type: String, comment: String){
+    let photoImage = PhotoImage(context: context)
+    photoImage.phrase = text
+    photoImage.name = date
+    photoImage.type = type
+    photoImage.comment = comment
     
     saveToDatabase()
   }
@@ -73,7 +66,7 @@ class Repository {
       
     }
   }
-
+  
   
   func deleteFromDatabase(name: String){
     let fetchRequest: NSFetchRequest<PhotoImage> = PhotoImage.fetchRequest()
@@ -139,3 +132,5 @@ class Repository {
     }
   }
 }
+
+
