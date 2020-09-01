@@ -10,25 +10,23 @@ import UIKit
 import Kingfisher
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-  var viewModel: ViewModel = ViewModel()
   
+  var viewModel: ViewModel = ViewModel()
   var dataToUI = Item()
+  var pickerController = UIImagePickerController()
   
   @IBOutlet weak var startTextLabel: UILabel!
   @IBOutlet weak var tableView: UITableView!
-  var pickerController = UIImagePickerController()
   
   override func viewDidLoad() {
     super.viewDidLoad()
-  //    print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
-    tableView.delegate = self
-    tableView.dataSource = self
-    pickerController.delegate = self
-    pickerController.sourceType = .camera// Then camera
-    pickerController.allowsEditing = true
-    overrideUserInterfaceStyle = .light
+    setupSettings()
     setupViewModel()
-    NotificationCenter.default.addObserver(self, selector: #selector(reactToNotification(_:)), name: .QuickActionCamera, object: nil)
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(reactToNotification(_:)),
+      name: .QuickActionCamera,
+      object: nil)
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -40,15 +38,21 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     present(pickerController, animated: true, completion: nil)
   }
   
-  func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+  func setupSettings() {
+    tableView.delegate = self
+    tableView.dataSource = self
+    pickerController.delegate = self
+    pickerController.sourceType = .camera
+    pickerController.allowsEditing = true
+    overrideUserInterfaceStyle = .light
+  }
+  
+  //MARK: - UIImagePickerControllerDelegate Methods
+  func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
     if let pickedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
       viewModel.didGetPhoto(pickedImage)
       }
     pickerController.dismiss(animated: true, completion: nil)
-  }
-  
-  @IBAction func cameraPressed(_ sender: UIButton) {
-    present(pickerController, animated: true, completion: nil)
   }
   
   private func setupViewModel() {
@@ -65,6 +69,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
       }
     }
   }
+  
+  @IBAction func cameraPressed(_ sender: UIButton) {
+    present(pickerController, animated: true, completion: nil)
+  }
+  
 }
 
 //MARK: - TableView Methods
@@ -97,7 +106,6 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
       cell.photoImage.layer.cornerRadius = 15
       cell.photoImage.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
       if let name = dataToUI.items[indexPath.row].name {
-        //      let starttime = Date().millisecondsSince1970
         let url = viewModel.getImageURL(fileName: name)
         if(url != nil){
           let processor = RoundCornerImageProcessor(cornerRadius: 20)
@@ -140,7 +148,6 @@ extension ViewController: TableViewCellDelegate {
       }
       present(activityController, animated: true)
     }
-    
   }
   
   func deleteImage(name: String) {
@@ -154,8 +161,6 @@ extension ViewController: TableViewCellDelegate {
     alert.addAction(deleteAction)
     present(alert, animated: true, completion: nil)
   }
-  
-  
   
 }
 

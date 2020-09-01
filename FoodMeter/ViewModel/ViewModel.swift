@@ -16,19 +16,17 @@ class ViewModel {
    
   var repository = Repository()
   var didUpdateDataToUI: ((Item) -> Void)?
-  private(set) var dataToUI: Item = Item(){
+  private(set) var dataToUI: Item = Item() {
     didSet {
       didUpdateDataToUI?(dataToUI)
     }
   }
-  var getDate: String {
-    let date = Date()
-    let formatter = DateFormatter()
-    formatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
-    let string = formatter.string(from: date)
-    return string
-  }
   
+  func didGetPhoto(_ image: UIImage) {
+    let date = getDate
+    saveImage(date: date, image: image)
+    detectFood(photoDate: date, with: image)
+  }
   
   func fetch() {
     repository.fetchData() { [weak self] items in
@@ -41,19 +39,11 @@ class ViewModel {
     }
   }
   
-  func didGetPhoto(_ image: UIImage){
-    let date = getDate
-    saveImage(date: date, image: image)
-    detectFood(photoDate: date, with: image)
-  }
-  
-  
-  
-  func saveImage(date: String, image: UIImage){
+  private func saveImage(date: String, image: UIImage) {
     repository.saveImageToFile(photoDate: date, image: image)
   }
   
-  func detectFood (photoDate: String, with image: UIImage) {
+  private func detectFood (photoDate: String, with image: UIImage) {
     guard let ciimage = CIImage(image: image) else {fatalError("Could not convert to CIImage")
     }
     guard let model = try? VNCoreMLModel(for: MealClassifier().model) else {fatalError("Loading CoreML Model Failed")}
@@ -76,7 +66,15 @@ class ViewModel {
     }
   }
   
-  private func getType(_ phrase: String) -> String{
+  private var getDate: String {
+    let date = Date()
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
+    let string = formatter.string(from: date)
+    return string
+  }
+  
+  private func getType(_ phrase: String) -> String {
      switch phrase {
      case "Дорогая еда" : return "1"
      case "Дешевая еда" : return "2"
@@ -88,7 +86,7 @@ class ViewModel {
      }
    }
   
-  private func getComment(_ string: String) -> String{
+  private func getComment(_ string: String) -> String {
     let expensive = ["Просто восторг!", "Выглядит очень аппетитно)", "Пальчики оближешь", "Круто, как-будто я сам готовил", "Шикуешь!", "Я бы съел"]
     let cheap = ["Эмм...ну так", "Вполне вкусно", "Если закрыть глаза, выглядит аппетитно", "С пивком сойдет", "Как в столовке", "Неплохо"]
     let no = ["А где еда?", "Зубы не поломай", "Я б не съел", "Не надо, не ешь!", "Уж лучше камней поесть"]
@@ -123,6 +121,7 @@ class ViewModel {
   
 }
 
+// MARK: - UIModel
 struct Item {
   let items: [PhotoImage]
   let expensiveFoodCount: Int
@@ -131,7 +130,12 @@ struct Item {
 }
 
 extension Item {
-  init(data: [PhotoImage] = [PhotoImage](), exCount: Int = 0, chCount: Int = 0, noFoodCount: Int = 0) {
+  init(
+    data: [PhotoImage] = [PhotoImage](),
+    exCount: Int = 0,
+    chCount: Int = 0,
+    noFoodCount: Int = 0
+  ) {
     self.items = data
     self.expensiveFoodCount = exCount
     self.cheapFoodCount = chCount

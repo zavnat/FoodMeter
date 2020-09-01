@@ -8,13 +8,13 @@
 
 import UIKit
 
-protocol TableViewCellDelegate {
+protocol TableViewCellDelegate: class {
   func sharePhoto(name: String, phrase: String, comment: String)
   func deleteImage(name: String)
 }
 
 class Cell: UITableViewCell {
-  var cellDelegate: TableViewCellDelegate?
+  weak var cellDelegate: TableViewCellDelegate?
   var itemData: PhotoImage?
   
   @IBOutlet weak var photoImage: UIImageView!
@@ -22,14 +22,11 @@ class Cell: UITableViewCell {
   @IBOutlet weak var commentLabel: UILabel!
   @IBOutlet weak var view: UIView!
   
-  
   @IBAction func shareButtonPressed(_ sender: UIButton) {
-    print("share pressed")
     cellDelegate?.sharePhoto(name: (itemData?.name)!, phrase: (itemData?.phrase)!, comment: itemData?.comment ?? "")
   }
   
   @IBAction func deleteButtonPressed(_ sender: UIButton) {
-    print("delete pressed")
     cellDelegate?.deleteImage(name: (itemData?.name)!)
   }
 }

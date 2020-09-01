@@ -13,35 +13,28 @@ import CoreData
 class Repository {
   let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
   
-  
   func fetchData (completion: @escaping ([PhotoImage]) -> ()) {
     let request: NSFetchRequest<PhotoImage> = PhotoImage.fetchRequest()
     let sort = NSSortDescriptor(key: "name", ascending: false)
     request.sortDescriptors = [sort]
-    do{
+    do {
       let data = try context.fetch(request)
-      print("Success load data from database")
       completion(data)
-      
-    }catch {
+    } catch {
       print("Error context fetch data")
     }
   }
-  
   
   func foodCount(_ type: Int) -> Int {
     let type = String(type)
     let request : NSFetchRequest<PhotoImage> = PhotoImage.fetchRequest()
     request.predicate = NSPredicate(format: "type = %@", type)
     request.resultType = .countResultType
-    
-    do{
+    do {
       if let result = (try context.execute(request) as? NSAsynchronousFetchResult<NSNumber>)?.finalResult?.first as? Int {
-        print("Success load count from database")
         return result
       }
-    }catch {
-      print("Error context load count from database")
+    } catch {
     }
     return 0
   }
@@ -58,17 +51,16 @@ class Repository {
     saveToDatabase()
   }
   
-  //MARK:- Work with Database
-  func saveToDatabase (){
-    do{
+  //MARK:- Database Methods
+  func saveToDatabase () {
+    do {
       try  context.save()
-    }catch{
-      
+    } catch {
+      print("Error save to database")
     }
   }
   
-  
-  func deleteFromDatabase(name: String){
+  func deleteFromDatabase(name: String) {
     let fetchRequest: NSFetchRequest<PhotoImage> = PhotoImage.fetchRequest()
     fetchRequest.predicate = NSPredicate(format: "name = %@", name)
     let request = NSBatchDeleteRequest(fetchRequest: fetchRequest as! NSFetchRequest<NSFetchRequestResult>)
@@ -76,23 +68,18 @@ class Repository {
     do {
       try context.execute(request)
       try context.save()
-      print("delete success")
     } catch {
       print ("There was an error")
     }
   }
   
-  
   //MARK:- Work with local folder
-  
   func saveImageToFile(photoDate: String, image: UIImage) {
-    
     guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
     
     let fileURL = documentsDirectory.appendingPathComponent(photoDate)
     guard let data = image.jpegData(compressionQuality: 1) else { return }
     
-    //Checks if file exists, removes it if so.
     if FileManager.default.fileExists(atPath: fileURL.path) {
       do {
         try FileManager.default.removeItem(atPath: fileURL.path)
@@ -101,36 +88,30 @@ class Repository {
         print("couldn't remove file at path", removeError)
       }
     }
-    
     do {
       try data.write(to: fileURL)
-      print("Successs write image to file")
     } catch let error {
       print("error saving file with error", error)
     }
-    
   }
-  
   
   func deleteFromFile(fileName: String) {
     print("delete from file")
     let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
-    
     let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
     let paths = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
     
     if let dirPath = paths.first {
       let imageUrl = URL(fileURLWithPath: dirPath).appendingPathComponent(fileName)
-      
       do {
         try FileManager.default.removeItem(at: imageUrl)
-        print("File deleted")
       }
       catch {
         print("Error")
       }
     }
   }
+  
 }
 
 
